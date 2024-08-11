@@ -1,9 +1,15 @@
 const express = require('express');
 const app = express();
 const path = require('path');
+const flash = require('connect-flash');
+
 const passport = require('passport');
 const connect = require('./config');
 const cookieSession = require('cookie-session');
+
+const config = require('config');
+const serverConfig = config.get('server');
+
 const mainRouter = require('./routes/main.router');
 const usersRouter = require('./routes/users.router');
 const productsRouter = require('./routes/products.router');
@@ -35,6 +41,8 @@ app.use(function (request, response, next) {
   next();
 });
 
+app.use(flash());
+
 app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport');
@@ -52,15 +60,19 @@ connect();
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use((req, res, next) => {
+  res.locals.error = req.flash('error');
+  res.locals.success = req.flash('success');
+  res.locals.currentUser = req.user;
+  next();
+});
+
 app.use('/', mainRouter);
 app.use('/auth', usersRouter);
 app.use('/admin/categories', adminCategoriesRouter);
 app.use('/admin/products', adminProductsRouter);
 app.use('/products', productsRouter);
 app.use('/cart', cartRouter);
-
-const config = require('config');
-const serverConfig = config.get('server');
 
 const port = serverConfig.port;
 app.listen(port, () => {
