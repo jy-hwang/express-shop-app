@@ -1,3 +1,5 @@
+<%- include('../partials/header') %>
+
 <div class="auth-wrapper">
   <form method="POST" action="/auth/login">
     <div class="text-center">
@@ -17,7 +19,9 @@
       </div>
     </div>
     <div class="text-end mt-2">
-      <a href="/auth/signup">회원가입페이지로..</a>
+      <a href="/signup">회원가입페이지로..</a>
     </div>
   </form>
 </div>
+
+<%- include('../partials/footer') %>
