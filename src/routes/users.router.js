@@ -23,7 +23,7 @@ usersRouter.post('/login', async (req, res, next) => {
       }
 
       //res.status(200).json({ message: 'Authorized', token: req.user.token });
-      res.redirect('/');
+      res.redirect('/products');
     });
   })(req, res, next); //middleware 안에 middleware 를 실행하려고 할때.
 });
@@ -34,7 +34,7 @@ usersRouter.post('/logout', async (req, res, next) => {
       console.log(err);
       return next(err);
     }
-    res.redirect('/login'); // 로그아웃 성공시 로그인 페이지로 이동.
+    res.redirect('/products'); // 로그아웃 성공시 로그인 페이지로 이동.
   });
 });
 
