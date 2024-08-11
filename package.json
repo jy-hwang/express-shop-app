@@ -1,0 +1,51 @@
+{
+  "name": "express-passport-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "prod": "cross-env NODE_ENV=production nodemon src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "better-sqlite3": "^11.1.2",
+    "body-parser": "^1.20.2",
+    "config": "^3.3.12",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.6",
+    "cookie-session": "^2.1.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.1",
+    "express-session": "^1.18.0",
+    "fs-extra": "^11.2.0",
+    "jsonwebtoken": "^9.0.2",
+    "method-override": "^3.0.0",
+    "mkdirp": "^3.0.1",
+    "mongoose": "^8.5.1",
+    "nodemon": "^3.1.4",
+    "passport": "^0.7.0",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-local": "^1.0.0",
+    "resize-img": "^2.0.0",
+    "sqlite3": "^5.1.7"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "prettier": "^3.3.3",
+    "prettier-plugin-ejs": "^1.0.3"
+  },
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.formatOnSave": true,
+  "[ejs]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "prettier.requireConfig": true
+}
