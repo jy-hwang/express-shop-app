@@ -17,6 +17,8 @@ const cartRouter = require('./routes/cart.router');
 const adminCategoriesRouter = require('./routes/admin-categories.router');
 const adminProductsRouter = require('./routes/admin-products.router');
 
+const methodOverride = require('method-override');
+
 require('dotenv').config();
 
 //process.env
@@ -42,6 +44,7 @@ app.use(function (request, response, next) {
 });
 
 app.use(flash());
+app.use(methodOverride('_method'));
 
 app.use(passport.initialize());
 app.use(passport.session());

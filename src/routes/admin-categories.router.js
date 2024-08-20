@@ -35,4 +35,25 @@ router.post('/add-category', checkAdmin, async (req, res, next) => {
   }
 });
 
+router.get('/', checkAdmin, async (req, res, next) => {
+  try {
+    const categories = await Category.find({});
+    res.render('admin/categories', { categories: categories });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.delete('/:id', checkAdmin, async (req, res, next) => {
+  try {
+    await Category.findByIdAndDelete(req.params.id);
+    req.flash('success', '카테고리가 삭제되었습니다.');
+    res.redirect('/admin/categories');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
