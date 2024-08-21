@@ -35,8 +35,71 @@
   <div class="row mb-3">
     <label for="image" class="form-label">Image</label>
     <input type="file" id="image" class="form-control" name="image" required>
-    <img src="#" alt="" id="imgPreview" class="mt-3" style="width: 100px;">
+    <img src="#" alt="" id="imagePreview" class="mt-3" style="width: 100px;">
   </div>
-<button class="btn btn-primary mb-3">생성하기</button>
+  <button class="btn btn-primary mb-3">생성하기</button>
 </form>
+
+<script>
+  function readFileAsText(inputEl) {
+    if (inputEl.files && inputEl.files[0]) {
+      let reader = new FileReader();
+
+      reader.readAsText(inputEl.files[0]);
+
+      reader.onload = function(e) {
+        console.log(e.target.result);
+      };
+    }
+  }
+
+  function readFileAsDataURL(inputEl) {
+    if (inputEl.files && inputEl.files[0]) {
+      console.log(inputEl);
+      console.log(inputEl.files[0]);
+
+      let reader = new FileReader();
+
+      reader.readAsDataURL(inputEl.files[0]);
+
+      reader.onload = function(e) {
+        //console.log(e.target.result);
+        document.querySelector('#imagePreview').setAttribute('src', e.target.result);
+      };
+    }
+  }
+
+  function readFileAsArrayBuffer(inputEl) {
+    if (inputEl.files && inputEl.files[0]) {
+      console.log(inputEl);
+      console.log(inputEl.files[0]);
+
+      let reader = new FileReader();
+
+      reader.readAsArrayBuffer(inputEl.files[0]);
+
+      reader.onload = function(e) {
+        console.log(e.target.result);
+      };
+    }
+  }
+
+  function readFileAsBinaryString(inputEl) {
+    if (inputEl.files && inputEl.files[0]) {
+      let reader = new FileReader();
+
+      reader.readFileAsBinaryString(inputEl.files[0]);
+
+      reader.onload = function(e) {
+        console.log(e.target.result);
+      };
+    }
+  }
+
+  document.querySelector('#image').addEventListener('change', function() {
+    readFileAsDataURL(this);
+  });
+
+</script>
+
 <%- include('../partials/footer') %>
