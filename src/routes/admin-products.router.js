@@ -3,6 +3,7 @@ const { checkAdmin } = require('../middleware/auth');
 const Category = require('../models/categories.model');
 const Product = require('../models/products.model');
 const fs = require('fs-extra');
+const ResizeImg = require('resize-img');
 const router = express.Router();
 
 router.get('/', checkAdmin, async (req, res, next) => {
@@ -91,8 +92,8 @@ router.get('/:id/edit', checkAdmin, async (req, res, next) => {
     const { _id, title, desc, category, price, image } = await Product.findById(
       req.params.id,
     );
-    const galleryDir = 'upload-files/product-images/' + _id + '/gallery';
-    const galleryImages = await fs.readdirSync(galleryDir);
+    const galleryDir = 'upload-files/product-images/' + _id + '/gallery/';
+    const galleryImages = fs.readdirSync(galleryDir);
     res.render('admin/edit-product', {
       title,
       desc,
@@ -103,6 +104,35 @@ router.get('/:id/edit', checkAdmin, async (req, res, next) => {
       galleryImages,
       id: _id,
     });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
+router.post('/product-gallery/:id', async (req, res, next) => {
+  const productImage = req.files.file;
+  const id = req.params.id;
+  const path =
+    'upload-files/product-images/' + id + '/gallery/' + req.files.file.name;
+  const thumbsPath =
+    'upload-files/product-images/' +
+    id +
+    '/gallery/thumbs/' +
+    req.files.file.name;
+
+  try {
+    // 원본 이미지를 gallery 폴더에 넣어주기
+    await productImage.mv(path);
+
+    // 이미지 resize
+    const buf = await ResizeImg(fs.readFileSync(path), {
+      width: 100,
+      height: 100,
+    });
+
+    fs.writeFileSync(thumbsPath, buf);
+    res.sendStatus(200);
   } catch (error) {
     console.error(error);
     next(error);
