@@ -84,4 +84,29 @@ router.delete('/:id', checkAdmin, async (req, res, next) => {
   }
 });
 
+router.get('/:id/edit', checkAdmin, async (req, res, next) => {
+  try {
+    const categories = await Category.find();
+
+    const { _id, title, desc, category, price, image } = await Product.findById(
+      req.params.id,
+    );
+    const galleryDir = 'upload-files/product-images/' + _id + '/gallery';
+    const galleryImages = await fs.readdirSync(galleryDir);
+    res.render('admin/edit-product', {
+      title,
+      desc,
+      category,
+      category: category.replace(/\s+/g, '-').toLowerCase(),
+      price,
+      image,
+      galleryImages,
+      id: _id,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
