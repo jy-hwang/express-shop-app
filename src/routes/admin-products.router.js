@@ -1,8 +1,21 @@
 const express = require('express');
 const { checkAdmin } = require('../middleware/auth');
 const Category = require('../models/categories.model');
-
+const Product = require('../models/products.model');
+const fs = require('fs-extra');
 const router = express.Router();
+
+router.get('/', checkAdmin, async (req, res, next) => {
+  try {
+    const products = await Product.find({});
+    res.render('admin/products', {
+      products,
+    });
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 
 router.get('/add-product', checkAdmin, async (req, res, next) => {
   try {
@@ -14,4 +27,45 @@ router.get('/add-product', checkAdmin, async (req, res, next) => {
   }
 });
 
+router.post('/', checkAdmin, async (req, res, next) => {
+  const imageFile = Buffer.from(req.files.image.name, 'binary').toString(
+    'utf-8',
+  );
+  const { title, desc, price, category } = req.body;
+  const slug = title.replace(/\s+/g, '-').toLowerCase();
+
+  try {
+    // 데이터를  데이터베이스에 저장하기
+    const newProduct = new Product({
+      title,
+      desc,
+      price,
+      category: category,
+      slug,
+      image: imageFile,
+    });
+    console.log(newProduct);
+    await newProduct.save();
+
+    // 폴더만들기
+    await fs.mkdirp('upload-files/product-images/' + newProduct.id);
+    await fs.mkdirp(
+      'upload-files/product-images/' + newProduct.id + '/gallery',
+    );
+    await fs.mkdirp(
+      'upload-files/product-images/' + newProduct.id + '/gallery/thumbs',
+    );
+
+    // 이미지 파일을 폴더에 넣어주기
+    const productImage = req.files.image;
+    const path =
+      'upload-files/product-images/' + newProduct.id + '/' + imageFile;
+    await productImage.mv(path);
+    req.flash('success', '상품이 추가되었습니다.');
+    res.redirect('/admin/products');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
 module.exports = router;

@@ -18,6 +18,7 @@ const adminCategoriesRouter = require('./routes/admin-categories.router');
 const adminProductsRouter = require('./routes/admin-products.router');
 
 const methodOverride = require('method-override');
+const fileUpload = require('express-fileupload');
 
 require('dotenv').config();
 
@@ -46,6 +47,11 @@ app.use(function (request, response, next) {
 app.use(flash());
 app.use(methodOverride('_method'));
 
+app.use(
+  fileUpload({
+    charset: 'utf-8',
+  }),
+);
 app.use(passport.initialize());
 app.use(passport.session());
 require('./config/passport');
@@ -62,7 +68,11 @@ app.set('view engine', 'ejs');
 connect();
 
 app.use(express.static(path.join(__dirname, 'public')));
-
+// 파일 업로드 위치 변경
+app.use(
+  '/upload-files',
+  express.static(path.join(__dirname, '..', 'upload-files')),
+);
 app.use((req, res, next) => {
   res.locals.error = req.flash('error');
   res.locals.success = req.flash('success');
