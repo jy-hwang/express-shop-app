@@ -139,4 +139,28 @@ router.post('/product-gallery/:id', async (req, res, next) => {
   }
 });
 
+router.delete('/:id/image/:imageId', checkAdmin, async (req, res, next) => {
+  const originalImage =
+    'upload-files/product-images/' +
+    req.params.id +
+    '/gallery/' +
+    req.params.imageId;
+
+  const thumbImage =
+    'upload-files/product-images/' +
+    req.params.id +
+    '/gallery/thumbs/' +
+    req.params.imageId;
+
+  try {
+    await fs.remove(originalImage);
+    await fs.remove(thumbImage);
+    req.flash('success', '이미지가 삭제되었습니다.');
+    res.redirect('/admin/products/' + req.params.id + '/edit');
+  } catch (error) {
+    console.error(error);
+    next(error);
+  }
+});
+
 module.exports = router;
